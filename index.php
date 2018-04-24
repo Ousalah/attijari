@@ -1,3 +1,5 @@
+<?php require 'modules/utils.class.php'; ?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,6 +11,7 @@
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -61,14 +64,14 @@
       <div class="col-md-4">
         <!-- start nav tab -->
         <ul class="nav nav-tabs">
-          <li class="active"><a data-toggle="tab" href="#filter">Filter</a></li>
-          <li><a data-toggle="tab" href="#actions">Actions</a></li>
+          <li class=""><a data-toggle="tab" href="#filter">Filter</a></li>
+          <li class="active"><a data-toggle="tab" href="#actions">Actions</a></li>
         </ul>
         <!-- end nav tab -->
 
         <div class="tab-content">
           <!-- start filter -->
-          <div id="filter" class="tab-pane fade in active">
+          <div id="filter" class="tab-pane fade in fade">
             <form class="form-horizontal">
 
               <!-- start filter date -->
@@ -143,14 +146,14 @@
           <!-- end filter -->
 
           <!-- start actions -->
-          <div id="actions" class="tab-pane fade">
+          <div id="actions" class="tab-pane active">
             <ul class="list-group">
-              <li class="list-group-item"><a href="#">Ouvrir</a></li>
-              <li class="list-group-item"><a href="#">Nouveau</a></li>
-              <li class="list-group-item"><a href="#">Suprimer</a></li>
-              <li class="list-group-item"><a href="#">Dupliquer</a></li>
-              <li class="list-group-item"><a href="#">Transfer -> BL</a></li>
-              <li class="list-group-item"><a href="#">Generer fichier</a></li>
+              <li class="list-group-item"><a href="#"><i class="fa fa-folder-open" aria-hidden="true"></i> Ouvrir</a></li>
+              <li class="list-group-item"><a href="#"><i class="fa fa-plus-square" aria-hidden="true"></i> Nouveau</a></li>
+              <li class="list-group-item"><a href="#"><i class="fa fa-trash" aria-hidden="true"></i> Suprimer</a></li>
+              <li class="list-group-item"><a href="#"><i class="fa fa-copy" aria-hidden="true"></i> Dupliquer</a></li>
+              <li class="list-group-item"><a href="#"><i class="fa fa-share" aria-hidden="true"></i> Transfer -> BL</a></li>
+              <!-- <li class="list-group-item"><a href="#"><i class="fa fa-plus-square" aria-hidden="true"></i> Generer fichier</a></li> -->
             </ul>
           </div>
           <!-- end actions -->
@@ -159,6 +162,14 @@
       <!-- end filter and action -->
 
       <!-- start table -->
+
+      <?php
+        $table = "client";
+        $clients = Utils::get_all($table);
+        $client = $clients[0];
+
+        echo $client->client." ".$client->tel;
+       ?>
       <div class="col-md-8">
         <table class="table table-striped">
           <thead>
