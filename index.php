@@ -164,12 +164,21 @@
       <!-- start table -->
 
       <?php
-        $table = "client";
-        $clients = Utils::get_all($table);
-        $client = $clients[0];
 
-        echo $client->client." ".$client->tel;
-       ?>
+
+
+        $clients = Utils::get_alltest("client");
+        echo "<pre>";
+        echo $clients->CLIENT;
+        //var_dump($clients);
+        echo "<pre>";
+
+        foreach ($clients as $client) {
+          echo $client->CLIENT . " ---------------   " . $client->TEL . "<br>";
+        }
+              
+
+               ?>
       <div class="col-md-8">
         <table class="table table-striped">
           <thead>
