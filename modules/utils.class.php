@@ -1,41 +1,38 @@
+
 <?php 
 // include_once 'config.php';
 class Utils
 {
 	private static $cnx=null;	
-	public static function connecter_db()
-	{
+	public static function connecter_db() {
 
-		// try {
-		//  	$cnx = new PDO("sqlsrv:Server=127.0.0.1;Database=donnees");
-		// 	$cnx->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		// } catch (Exception $e) {
-		//  	die(print_r($e->getMessage()));
-		// } 
+		try {
+			if(!self::$cnx) {			
+				$cnx = new PDO("sqlsrv:Server=127.0.0.1;Database=donnees");
+				$cnx->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			}	
+		} catch (Exception $e) {
+			die(print_r($e->getMessage()));
+		}
 
+		return  $cnx;	
 
-
-
-
-
-		$serverName = "127.0.0.1";
-		$connectionInfo = array( "Database"=>"donnees");
-		$cnx = sqlsrv_connect( $serverName, $connectionInfo);
-		// 	if(!self::$cnx){
-		// 	$cnx = new PDO("sqlsrv:Server=127.0.0.1;Database=donnees");
- 		// 	$cnx->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		// }
-
-		return  self::$cnx;	
 	}
 
 	// used the first time in Survey Project
-	public static function existTable(){
-		$cnx=Utils::connecter_db();
-		$pr=$cnx->prepare("select 1 from survey LIMIT 1");
+	public static function tableExists($table){
 
-		$pr->execute();
-		return $pr->fetchAll();
+        // Try a select statement against the table
+        // Run it in try/catch in case PDO is in ERRMODE_EXCEPTION.
+        try {
+			$cnx=Utils::connecter_db();
+            $pr = $cnx->query("select 1 from $table LIMIT 1");
+        } catch (Exception $e) {
+            // We got an exception == table not found
+            return FALSE;
+        }
+        // Result is either boolean FALSE (no table found) or PDOStatement Object (table found)
+        return $result !== FALSE;
 		 
 	}	
 
@@ -215,36 +212,26 @@ class Utils
 
 	}
 
-	public static function get_all($table)
+	public static function get_all($table, $order = false)
 	{
+		
 		$cnx=Utils::connecter_db();
-
-		$pr=$cnx->prepare("select * from $table	order by id desc");
-
+		$sql = "select * from $table";
+		if ($order) $sql .= " order by id desc";
+		// "select * from $table	order by id desc"
+		$pr=$cnx->prepare( $sql );
 		$pr->execute();
+
 		return $pr->fetchAll(PDO::FETCH_OBJ);
 	}
 
-
-	public static function get_alltest($table)
-	{
-
-	 	// $cnx = new PDO("sqlsrv:Server=127.0.0.1;Database=donnees");
-		// $cnx->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-		$cnx=Utils::connecter_db();
-
-		$pr=sqlsrv_prepare( $cnx, "select * from $table");
-		sqlsrv_execute( $pr );
-		return $pr->fetchAll(PDO::FETCH_OBJ);
-	}
-
+	
 	public static function getAll_noOrderBy($table)
 	{
 		$cnx=Utils::connecter_db();
 		$pr=$cnx->prepare("select * from $table");
-
 		$pr->execute();
+
 		return $pr->fetchAll(PDO::FETCH_OBJ);
 	}
 

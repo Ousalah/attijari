@@ -1,4 +1,4 @@
-<?php require 'modules/utils.class.php'; ?>
+<?php require 'model/CommandeModel.php'; ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +13,6 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet">
-
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -64,26 +63,26 @@
       <div class="col-md-4">
         <!-- start nav tab -->
         <ul class="nav nav-tabs">
-          <li class=""><a data-toggle="tab" href="#filter">Filter</a></li>
-          <li class="active"><a data-toggle="tab" href="#actions">Actions</a></li>
+          <li class="active"><a data-toggle="tab" href="#filter">Filter</a></li>
+          <li><a data-toggle="tab" href="#actions">Actions</a></li>
         </ul>
         <!-- end nav tab -->
 
         <div class="tab-content">
           <!-- start filter -->
-          <div id="filter" class="tab-pane fade in fade">
-            <form class="form-horizontal">
+          <div id="filter" class="tab-pane fade in active">
+            <form class="form-horizontal" action="controller/Commande.php?a=filter" method="post">
 
               <!-- start filter date -->
               <div class="form-group">
                 <div class="col-md-6">
-                  <label class="control-label" for="textinput">Du</label>  
-                  <input id="textinput" name="textinput" type="date" placeholder="placeholder" class="form-control input-md">
+                  <label class="control-label" for="DU_DATE_BC">Du</label>  
+                  <input id="DU_DATE_BC" name="DU_DATE_BC" type="date" placeholder="placeholder" class="form-control input-md">
                 </div>
 
                 <div class="col-md-6">
-                  <label class="control-label" for="textinput">Au</label>  
-                  <input id="textinput" name="textinput" type="date" placeholder="placeholder" class="form-control input-md">
+                  <label class="control-label" for="AU_DATE_BC">Au</label>  
+                  <input id="AU_DATE_BC" name="AU_DATE_BC" type="date" placeholder="placeholder" class="form-control input-md">
                 </div>
               </div>
               <!--  end filter date -->
@@ -91,10 +90,18 @@
               <!-- start filter boutique -->
               <div class="form-group">
                 <div class="col-md-12">
-                  <label class="control-label" for="selectbasic">Boutique</label>
-                  <select id="selectbasic" name="selectbasic" class="form-control">
-                    <option value="1">Tous</option>
-                    <option value="2">Option two</option>
+                  <label class="control-label" for="REF_ENTROPOT">Boutique</label>
+                  <select id="REF_ENTROPOT" name="REF_ENTROPOT" class="form-control">
+
+                    <option value="0">Tous</option>
+                    <?php 
+                      $entropots = Utils::get_all("ENTROPOT");
+                      foreach ($entropots as $entropot) :
+                      
+                     ?>
+                      <option value="<?php echo $entropot->REF_ENTROPOT ?>"><?php echo $entropot->ENTROPOT ?></option>
+                    <?php endforeach ?>
+
                   </select>
                 </div>
               </div>              
@@ -103,10 +110,16 @@
               <!-- start filter fournisseur -->
               <div class="form-group">
                 <div class="col-md-12">
-                  <label class="control-label" for="selectbasic">Fournisseur</label>
-                  <select id="selectbasic" name="selectbasic" class="form-control">
-                    <option value="1">Tous</option>
-                    <option value="2">Option two</option>
+                  <label class="control-label" for="CODE_FRS">Fournisseur</label>
+                  <select id="CODE_FRS" name="CODE_FRS" class="form-control">
+                    <option value="0">Tous</option>
+                    <?php 
+                      $fournisseurs = Utils::get_all("FOURNISSEUR");
+                      foreach ($fournisseurs as $fournisseur) :
+                      
+                     ?>
+                      <option value="<?php echo $fournisseur->CODE_FRS ?>"><?php echo $fournisseur->FOURNISSEUR ?></option>
+                    <?php endforeach ?>
                   </select>
                 </div>
               </div>              
@@ -115,16 +128,16 @@
               <!-- start show documents -->
               <div class="form-group">
                 <div class="col-md-12">
-                  <label class="control-label" for="radios">Afficher les documents</label>
+                  <label class="control-label" for="VALIDER">Afficher les documents</label>
                   <div class="radio">
-                    <label for="radios-0">
-                      <input type="radio" name="radios" id="radios-0" value="1" checked="checked">
+                    <label for="VALIDER-0">
+                      <input type="radio" name="VALIDER" id="VALIDER-0" value="O" checked="checked">
                       Validées
                     </label>
                   </div>
                   <div class="radio">
-                    <label for="radios-1">
-                      <input type="radio" name="radios" id="radios-1" value="2">
+                    <label for="VALIDER-1">
+                      <input type="radio" name="VALIDER" id="VALIDER-1" value="N">
                       Non Validées
                     </label>
                   </div>
@@ -135,8 +148,8 @@
               <!-- start buttons filter and print -->
               <div class="form-group">
                 <div class="col-md-12">
-                  <button id="button1id" name="button1id" class="btn btn-success">Filter</button>
-                  <button id="button2id" name="button2id" class="btn btn-danger">Imprimer</button>
+                  <button type="submit" class="btn btn-success">Filter</button>
+                  <button class="btn btn-danger">Imprimer</button>
                 </div>
               </div>
               <!-- end buttons filter and print -->
@@ -146,7 +159,7 @@
           <!-- end filter -->
 
           <!-- start actions -->
-          <div id="actions" class="tab-pane active">
+          <div id="actions" class="tab-pane fade">
             <ul class="list-group">
               <li class="list-group-item"><a href="#"><i class="fa fa-folder-open" aria-hidden="true"></i> Ouvrir</a></li>
               <li class="list-group-item"><a href="#"><i class="fa fa-plus-square" aria-hidden="true"></i> Nouveau</a></li>
@@ -162,23 +175,6 @@
       <!-- end filter and action -->
 
       <!-- start table -->
-
-      <?php
-
-
-
-        $clients = Utils::get_alltest("client");
-        echo "<pre>";
-        echo $clients->CLIENT;
-        //var_dump($clients);
-        echo "<pre>";
-
-        foreach ($clients as $client) {
-          echo $client->CLIENT . " ---------------   " . $client->TEL . "<br>";
-        }
-              
-
-               ?>
       <div class="col-md-8">
         <table class="table table-striped">
           <thead>
@@ -192,42 +188,40 @@
             </tr>
           </thead>
           <tbody>
+
+            <?php
+
+              $tables = "COMMANDEF as c, ENTROPOT as e, FOURNISSEUR as f";
+              $rows = "c.REF_BC, e.ENTROPOT, f.FOURNISSEUR, c.DATE_BC, c.MNT_HT, c.MNT_TTC";
+              $where = "c.REF_ENTROPOT = e.REF_ENTROPOT and f.CODE_FRS=c.CODE_FRS and c.VALIDER='O'";
+              $order = null;
+              $limit = 100;
+              $commandes = Commande::select($tables, $rows, $where, $order, $limit);
+
+              $total_ht = 0;
+              $total_ttc = 0;
+              foreach ($commandes as $commande) :
+
+                $total_ht += $commande->MNT_HT;
+                $total_ttc += $commande->MNT_TTC;
+             ?>
             <tr>
-              <td>1</td>
-              <td>Mark</td>
-              <td>Mark</td>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr><tr>
-              <td>1</td>
-              <td>Mark</td>
-              <td>Mark</td>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr><tr>
-              <td>1</td>
-              <td>Mark</td>
-              <td>Mark</td>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr><tr>
-              <td>1</td>
-              <td>Mark</td>
-              <td>Mark</td>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
+              <td><?php echo $commande->REF_BC ?></td>
+              <td><?php echo $commande->ENTROPOT ?></td>
+              <td><?php echo $commande->FOURNISSEUR ?></td>
+              <td><?php echo $commande->DATE_BC ?></td>
+              <td><?php echo $commande->MNT_HT ?></td>
+              <td><?php echo $commande->MNT_TTC ?></td>
             </tr>
+            <?php endforeach; ?>
+
             <tr>
               <td></td>
               <td></td>
               <td></td>
               <th>Total</th>
-              <th>574689</th>
-              <th>574854</th>
+              <th><?php echo $total_ht ?></th>
+              <th><?php echo $total_ttc ?></th>
             </tr>
           </tbody>
         </table>
@@ -238,7 +232,13 @@
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
   </body>
+  <script>
+
+
+  </script>
 </html>
