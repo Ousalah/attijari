@@ -21,7 +21,7 @@ class Commande extends Utils
             $sql .= ' ORDER BY ' . $order;
         }
         
-
+        // var_dump($sql); die();
     	$cnx=Utils::connecter_db();
         $pr = $cnx->prepare($sql);
         $pr->execute();

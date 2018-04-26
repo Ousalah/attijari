@@ -71,7 +71,7 @@
         <div class="tab-content">
           <!-- start filter -->
           <div id="filter" class="tab-pane fade in active">
-            <form class="form-horizontal" action="controller/Commande.php?a=filter" method="post">
+            <form class="form-horizontal" action="index.php?a=filter" method="post">
 
               <!-- start filter date -->
               <div class="form-group">
@@ -191,9 +191,24 @@
 
             <?php
 
+              $VALIDER = "AND c.VALIDER='O'";
+              $REF_ENTROPOT = "";
+              $CODE_FRS = "";
+              if (isset($_GET["a"]) && !empty($_GET["a"])) {
+                extract($_POST);
+
+                // $DU_DATE_BC = ($REF_ENTROPOT > 0) ? " AND REF_ENTROPOT = " . $REF_ENTROPOT : "" ;
+                // $AU_DATE_BC = ($REF_ENTROPOT > 0) ? " AND REF_ENTROPOT = " . $REF_ENTROPOT : "" ;
+
+                $REF_ENTROPOT = ($REF_ENTROPOT > 0) ? " AND c.REF_ENTROPOT = '" . $REF_ENTROPOT . "'" : "" ;
+                $CODE_FRS = ($CODE_FRS > 0) ? " AND c.CODE_FRS = " . $CODE_FRS : "" ;
+                $VALIDER = ($VALIDER == "O") ? " AND c.VALIDER='O'" : " AND c.VALIDER='N'" ;
+
+              }
+
               $tables = "COMMANDEF as c, ENTROPOT as e, FOURNISSEUR as f";
               $rows = "c.REF_BC, e.ENTROPOT, f.FOURNISSEUR, c.DATE_BC, c.MNT_HT, c.MNT_TTC";
-              $where = "c.REF_ENTROPOT = e.REF_ENTROPOT and f.CODE_FRS=c.CODE_FRS and c.VALIDER='O'";
+              $where = "c.REF_ENTROPOT = e.REF_ENTROPOT and f.CODE_FRS=c.CODE_FRS $VALIDER $REF_ENTROPOT $CODE_FRS";
               $order = null;
               $limit = 100;
               $commandes = Commande::select($tables, $rows, $where, $order, $limit);
