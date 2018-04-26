@@ -94,7 +94,7 @@
                   <select id="REF_ENTROPOT" name="REF_ENTROPOT" class="form-control">
 
                     <option value="0">Tous</option>
-                    <?php 
+                    <?php
                       $entropots = Utils::get_all("ENTROPOT");
                       foreach ($entropots as $entropot) :
                       
@@ -196,6 +196,18 @@
               $CODE_FRS = "";
               if (isset($_GET["a"]) && !empty($_GET["a"])) {
                 extract($_POST);
+                // var_dump($_POST); die();
+
+                if (!empty($DU_DATE_BC) && !empty($AU_DATE_BC)) {
+                  $DATE_BC = (condition) ? a : b ;
+                } else if (!empty($DU_DATE_BC)) {
+                  # code...
+                } else if (!empty($AU_DATE_BC)) {
+                  # code...
+                } else {
+
+                }
+                
 
                 // $DU_DATE_BC = ($REF_ENTROPOT > 0) ? " AND REF_ENTROPOT = " . $REF_ENTROPOT : "" ;
                 // $AU_DATE_BC = ($REF_ENTROPOT > 0) ? " AND REF_ENTROPOT = " . $REF_ENTROPOT : "" ;
