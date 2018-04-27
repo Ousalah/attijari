@@ -199,13 +199,13 @@
                 // var_dump($_POST); die();
 
                 if (!empty($DU_DATE_BC) && !empty($AU_DATE_BC)) {
-                  $DATE_BC = (condition) ? a : b ;
+                  $DATE_BC = ($DU_DATE_BC >= $AU_DATE_BC) ? "" : " AND c.DATE_BC >= $DU_DATE_BC AND c.DATE_BC <= $AU_DATE_BC";
                 } else if (!empty($DU_DATE_BC)) {
-                  # code...
+                  $DATE_BC = " AND c.DATE_BC <= $DU_DATE_BC";
                 } else if (!empty($AU_DATE_BC)) {
-                  # code...
+                  $DATE_BC = " AND c.DATE_BC >= $AU_DATE_BC";
                 } else {
-
+                  $DATE_BC = "";
                 }
                 
 
@@ -220,7 +220,7 @@
 
               $tables = "COMMANDEF as c, ENTROPOT as e, FOURNISSEUR as f";
               $rows = "c.REF_BC, e.ENTROPOT, f.FOURNISSEUR, c.DATE_BC, c.MNT_HT, c.MNT_TTC";
-              $where = "c.REF_ENTROPOT = e.REF_ENTROPOT and f.CODE_FRS=c.CODE_FRS $VALIDER $REF_ENTROPOT $CODE_FRS";
+              $where = "c.REF_ENTROPOT = e.REF_ENTROPOT and f.CODE_FRS=c.CODE_FRS $VALIDER $REF_ENTROPOT $CODE_FRS $DATE_BC";
               $order = null;
               $limit = 100;
               $commandes = Commande::select($tables, $rows, $where, $order, $limit);
